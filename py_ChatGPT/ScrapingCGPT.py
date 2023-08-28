@@ -287,12 +287,15 @@ def pass_orders(browser, cnt, short_timer, large_timer, orders):
       browser.find_element(By.CSS_SELECTOR, "body").click()
       actions.key_down(Keys.COMMAND).send_keys(Keys.END).key_up(Keys.COMMAND).perform()
        """
+      """ 
+      #スクロール挟むための試験
       browser.execute_script("window.scrollBy(0, document.body.scrollHeight);")
       actions = ActionChains(browser)
       print(browser.find_element(By.CSS_SELECTOR, "div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div > div.flex-1.overflow-hidden > div > div > div > div:nth-child(2)").text)
       browser.find_element(By.CSS_SELECTOR, "div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div > div.flex-1.overflow-hidden > div > div > div > div:nth-child(2)").click()
       actions.key_down(Keys.COMMAND).send_keys(Keys.ARROW_DOWN).key_up(Keys.COMMAND).perform()
       print("ok")
+       """
       #sleep(large_timer)
       #input("test")
       #print(bool(WebDriverWait(browser, large_timer).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#game-core-frame")))))
@@ -545,9 +548,11 @@ def scraping_exist_browser(l_orders) -> list:
     d_sentences[title] = sentences
     l_sentences.append(d_sentences)
     sleep(short_timer)
-  else:
+
+  """ else:
     print(f"current_url error: {BROWSER.current_url}")
-    exit()
+    exit() """
+  
   return l_sentences
 
       #url_list = pass_img_urls(browser=BROWSER, cnt=retry_cnt, timer=short_timer)

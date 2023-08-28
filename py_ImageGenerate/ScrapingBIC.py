@@ -766,6 +766,7 @@ def download_images(browser, cnt, timer, urls, prompt, dir_path) -> list:
   content_type = '.jpeg'
   images = []
   trans_prompt = jp_en_translate(prompt)
+  trans_prompt = re.sub(r'[,.]','',trans_prompt)
   #print(prompt)
   #prompt = prompt.split(' ')
   #input(prompt)
@@ -793,7 +794,7 @@ def scraping_images(d_prompts) -> dict:
 
   "Chrome の起動"
   options = webdriver.ChromeOptions()
-  options.add_argument('--headless')
+  #options.add_argument('--headless')
   #options.add_argument('--start-maximized')
   with webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options) as BROWSER: # For Mac, Browser version auto-upgrade
     BROWSER.implicitly_wait(large_timer)
@@ -825,6 +826,7 @@ def scraping_images(d_prompts) -> dict:
       else: #失敗しなかった場合は、ループを抜ける
         auth_check = True
         print(f"success all login sequence!!! retry count {i}")
+        break
     
     if not auth_check:
       exit(f"Authentication sequence failed. Please try again or check {CONFIG_FILE}.")
