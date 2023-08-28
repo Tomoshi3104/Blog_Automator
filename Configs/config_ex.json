@@ -1,0 +1,40 @@
+{
+  "py_Notion": {
+    "ID": "type database ID",
+    "Key": "type API key"
+  },
+  "py_ImageGenerate": {
+    "AuthCookie": "",
+    "MicrosoftAuth": {
+      "email": "type your microsoft email",
+      "password": "type password"
+    },
+    "PromptCustom": "type commonly used prompts for image generate"
+  },
+  "py_WordPress": {
+    "User": "type your WordPress username",
+    "Key": "type password",
+    "URL": "https:type-your-URL.com/"
+  },
+  "py_ChatGPT": {
+    "SkipAutoLogIn": false,
+    "IsNewBrowser": false,
+    "SignInOption":"email",
+    "User": "type your email for Login to ChatGPT",
+    "password": "type password",
+    "Order": [
+      "「{Title}」 についてブログ記事を書いて。",
+      "({Title} = {Full Form})",
+      "6段落構成で、第1、第2、第6は指定した段落名とすること。その他段落名は適宜、内容に沿ったものにすること",
+      "第1段落名：「{Title} とは」",
+      "第2段落名：「{Title} の特徴」",
+      "第6段落名：「まとめ」",
+      "全体はです・ます調で統一しつつ、フォーマルな表現を用いる。",
+      "回答は「{Title} とは」、から始めて、ブログ記事以外の文章は一切書かないこと。",
+      "段落は、<h2>段落</h2>のようにh2のhtmlタグで囲うこと。",
+      "また段落以外の文章は、<p>文章</p>のようにpのhtmlタグで囲うこと。",
+      "行間は、段落後も文章後も同様に、必ず '＼ｎ(半角)' を1つだけ使用すること。",
+      "逆に '＼ｎ＼ｎ(半角)' のように、2つ以上連続で使用してはいけない。"
+    ]
+  }
+}
