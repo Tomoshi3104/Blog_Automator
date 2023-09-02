@@ -275,8 +275,15 @@ def pass_orders(browser, cnt, short_timer, large_timer, orders):
         while aria_hidden_cnt > 2:
           input("Please finish the Human Verification and press Enter to move on!")
           aria_hidden_cnt = len(WebDriverWait(browser, short_timer).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div[aria-hidden='true']"))))
-
+      
+      
+      #if WebDriverWait(browser, short_timer).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "main > div > div.flex-1.overflow-hidden > div > div > div > button.cursor-pointer"))):
+        #down_scroll_button = browser.find_elements(by=By.CSS_SELECTOR, value="main > div > div.flex-1.overflow-hidden > div > div > div > button.cursor-pointer")
+        #down_scroll_button = WebDriverWait(browser, short_timer).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "main > div > div.flex-1.overflow-hidden > div > div > div > button.cursor-pointer")))
+        #down_scroll_button.click()
+      
       sleep(short_timer)
+      #__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div > div.flex-1.overflow-hidden > div > div > div > button
 
       """ 
       "スクロールを挟む方法1"
@@ -354,6 +361,16 @@ def end_check(browser, cnt, short_timer, large_timer):
               aria_hidden_cnt = len(WebDriverWait(browser, short_timer).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div[aria-hidden='true']"))))
         sleep(short_timer)
         gen_message = WebDriverWait(browser, large_timer).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div.flex.items-center.md\:items-end > div > button > div"))).text
+      
+      "スクロール"
+      """ 
+      down_scroll_button_cnt = len(browser.find_elements(by=By.CSS_SELECTOR, value="main > div > div.flex-1.overflow-hidden > div > div > div > button.cursor-pointer"))
+      #down_scroll_button_cnt = len(WebDriverWait(browser, short_timer).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "main > div > div.flex-1.overflow-hidden > div > div > div > button.cursor-pointer"))))
+      print(down_scroll_button_cnt)
+      if down_scroll_button_cnt >= 1:
+        print("pushing down scroll button")
+        WebDriverWait(browser, short_timer).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "main > div > div.flex-1.overflow-hidden > div > div > div > button.cursor-pointer"))).click()
+       """
       #input()
       #copied_text = browser.execute_script("return window.getSelection().toString();")
       #print(f"copied_text:\n{copied_text}")
@@ -520,7 +537,7 @@ def scraping_exist_browser(l_orders) -> list:
   #driver = webdriver.Chrome(executable_path=driver_path, options=options)
   #options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
   BROWSER = webdriver.Chrome(service=service, options=options)# For Mac, Browser version auto-upgrade
-  BROWSER.implicitly_wait(large_timer)
+  BROWSER.implicitly_wait(short_timer)
 
   for i in range(len(BROWSER.window_handles)):
     BROWSER.switch_to.window(BROWSER.window_handles[i])
@@ -529,7 +546,7 @@ def scraping_exist_browser(l_orders) -> list:
       continue
     else:
       break
-  sleep(10)
+  #sleep(10)
   """ 
   if not SKIP_LOGIN:
     BROWSER.get(URLs[0])

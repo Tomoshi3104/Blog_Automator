@@ -29,7 +29,7 @@ TMP_DIR = "tmp"
 TMP_FILE = "Notion_Pages.json"
 TMP_FILE_PATH = os.path.join(ROOT_DIR, TMP_DIR, TMP_FILE)
 
-last_endpoint = 4
+last_endpoint = 5
 
 def get_position():
   argparser = ArgumentParser()
@@ -64,13 +64,13 @@ def find_checkpoint():
 
 def main():
   args = get_position()
-  if args.current_checkpoint:
-    print(f"Current checkpoint: {checkpoint}")
-    exit()
   if args.start_over:
     checkpoint = 0
   else:
     checkpoint = find_checkpoint()
+  if args.current_checkpoint:
+    print(f"Current checkpoint: {checkpoint}")
+    exit()
 
   if checkpoint <= 0 and args.end >= 0:
     subprocess.run(["say", "-v", "Daniel", "Reading Database from Notion has begun."])
