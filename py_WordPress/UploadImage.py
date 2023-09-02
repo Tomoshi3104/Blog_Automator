@@ -29,9 +29,12 @@ TMP_DIR = "tmp"
 TMP_FILE = "Notion_Pages.json"
 TMP_FILE_PATH = os.path.join(ROOT_DIR, TMP_DIR, TMP_FILE)
 
-IMAGE_DIR = "images"
-IMAGE_DIR_PATH = os.path.join(ROOT_DIR, TMP_DIR, IMAGE_DIR)
-                             
+#IMAGE_DIR = "images"
+#IMAGE_DIR_PATH = os.path.join(ROOT_DIR, TMP_DIR, TRIMMED_DIR)
+TRIMMED_DIR = "trim_img"
+TRIMMED_DIR_PATH = os.path.join(ROOT_DIR, TMP_DIR, TRIMMED_DIR)
+os.makedirs(TRIMMED_DIR_PATH, exist_ok=True)
+
 META_FILE = "metadata.txt"
 
 LOG_DIR = "log"
@@ -114,11 +117,11 @@ def get_headers():
   pass
 
 def get_file_path(title, num):
-  if title not in os.listdir(IMAGE_DIR_PATH):
-    exit(f"get_file_path エラー: {title}")
+  #if title not in os.listdir(IMAGE_DIR_PATH):
+    #exit(f"get_file_path エラー: {title}\n{os.listdir(IMAGE_DIR_PATH)}")
   #f"{title['title']}_{title['images'][num]}"
-  return os.path.join(IMAGE_DIR_PATH, title, num)
-  return f"{IMAGE_DIR_PATH}/{title}/{title['Images'][num]}"
+  return os.path.join(TRIMMED_DIR_PATH, title, num)
+  return f"{TRIMMED_DIR_PATH}/{title}/{title['Images'][num]}"
 
 def upload_image(images:list) -> dict:
   api_url = f'{URL}{PATH_MEDIA}'
@@ -211,7 +214,7 @@ def upload_image(images:list) -> dict:
         #for i in range(len(image['Images'])):
           #d["Images"].append(f'{i}{FILE_EXT}')
 
-    data["checkpoint"] = 4
+    data["checkpoint"] = 5
     with open(TMP_FILE_PATH, mode='w') as f:
       json.dump(data, f, indent=2, ensure_ascii=False)
 
@@ -233,13 +236,17 @@ def wp_create_post(posts:list) -> dict:
       print(f"投稿の追加 失敗 code:{res.status_code} reason:{res.reason} msg:{error_msg['message']}")
       #return {}
 
+def delete_sub_dir(dir_path):
+  shutil.rmtree(dir_path)
+  os.makedirs(dir_path)
+
 def post_images():
   notion_data = read_json()
   data_for_IMAGE = json_to_IMAGE(notion_data)
   #print(data_for_IMAGE)
   #input("stop")
   upload_image(data_for_IMAGE)
-  pass
+  delete_sub_dir(TRIMMED_DIR_PATH)
 
 def main():
   post_images()

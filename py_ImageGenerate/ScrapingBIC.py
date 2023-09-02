@@ -39,7 +39,8 @@ TMP_FILE = "Notion_Pages.json"
 TMP_FILE_PATH = os.path.join(ROOT_DIR, TMP_DIR, TMP_FILE)
 
 IMAGE_DIR = "images"
-
+IMAGE_DIR_PATH = os.path.join(ROOT_DIR, TMP_DIR, IMAGE_DIR)
+os.makedirs(IMAGE_DIR_PATH, exist_ok=True)
 META_FILE = "metadata.txt"
 
 LOG_DIR = "log"
@@ -717,12 +718,26 @@ def pass_img_urls(browser, cnt, timer) -> list:
             for column in range(1, l_column+1):
               image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"div#mmComponent_images_as_1 > ul:nth-child({row}) > li:nth-child({column}) > div > div > a > div > img")))
               img_url = image.get_attribute("src")
+              "より高画質の画像をダウンロードする際は有効にする"
+              img_url = re.sub(r"\?w=.*pid=ImgGn", "?pid=ImgGn", img_url)
+              #input(img_url)
+              #image_page = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"div#mmComponent_images_as_1 > ul:nth-child({row}) > li:nth-child({column}) > div > div > a")))
+              #browser.get(image_page.get_attribute("href"))
+              #image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"#mainImageWindow > div.mainImage.current.curimgonview > div > div > div > img")))
+              #img_url = image.get_attribute("src")
+              
               #print(img_url)
               img_url_list.append(img_url)
           else:
             #print("single column")
             image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"div#mmComponent_images_as_1 > ul:nth-child({row}) > li > div > div > a > div > img")))
             img_url = image.get_attribute("src")
+            "より高画質の画像をダウンロードする際は有効にする"
+            img_url = re.sub(r"\?w=.*pid=ImgGn", "?pid=ImgGn", img_url)
+            #image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"div#mmComponent_images_as_1 > ul:nth-child({row}) > li > div > div > a")))
+            #browser.get(image_page.get_attribute("href"))
+            #image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"#mainImageWindow > div.mainImage.current.curimgonview > div > div > div > img")))
+            #img_url = image.get_attribute("src")
             #print(img_url)
             img_url_list.append(img_url)
           #column1 = len(browser.find_elements(By.CSS_SELECTOR, f"div#mmComponent_images_as_1 > ul > li:nth-child(1)"))
@@ -736,12 +751,22 @@ def pass_img_urls(browser, cnt, timer) -> list:
           for column in range(1, l_column+1):
             image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"div#mmComponent_images_as_1 > ul > li:nth-child({column}) > div > div > a > div > img")))
             img_url = image.get_attribute("src")
+            "より高画質の画像をダウンロードする際は有効にする"
+            img_url = re.sub(r"\?w=.*pid=ImgGn", "?pid=ImgGn", img_url)
+            #browser.get(image_page.get_attribute("href"))
+            #image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"#mainImageWindow > div.mainImage.current.curimgonview > div > div > div > img")))
+            #img_url = image.get_attribute("src")
             #print(img_url)
             img_url_list.append(img_url)
         else:
           #print("single column")
           image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"div#mmComponent_images_as_1 > ul > li > div > div > a > div > img")))
           img_url = image.get_attribute("src")
+          "より高画質の画像をダウンロードする際は有効にする"
+          img_url = re.sub(r"\?w=.*pid=ImgGn", "?pid=ImgGn", img_url)
+          #browser.get(image_page.get_attribute("href"))
+          #image = WebDriverWait(browser, timer).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"#mainImageWindow > div.mainImage.current.curimgonview > div > div > div > img")))
+          #img_url = image.get_attribute("src")
           #print(img_url)
           img_url_list.append(img_url)
         #print(l_row, column)
@@ -762,21 +787,21 @@ def set_img_dir(title):
   os.makedirs(target_dir_path, exist_ok=True)
   return target_dir_path
 
-def download_images(browser, cnt, timer, urls, prompt, dir_path) -> list:
+def download_images(browser, cnt, timer, urls, title, prompt, dir_path) -> list:
   content_type = '.jpeg'
   images = []
-  trans_prompt = jp_en_translate(prompt)
-  trans_prompt = re.sub(r'[,.]','',trans_prompt)
-  #print(prompt)
-  #prompt = prompt.split(' ')
-  #input(prompt)
+  #trans_prompt = jp_en_translate(prompt)
+  #trans_prompt = re.sub(r'[,.]','',trans_prompt)
+  trans_title = jp_en_translate(title)
+  now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
   for i, img in zip(range(len(urls)), urls):
     #print(img)
     with urllib.request.urlopen(img) as rf:
       img_data = rf.read()
     # with open()構文を使ってバイナリデータをjpeg形式で書き出す
     
-    filename = f"{dir_path}/{'_'.join(trans_prompt.split(' '))[:50]}_{i}{content_type}"
+    #filename = f"{dir_path}/{'_'.join(trans_prompt.split(' '))[:50]}_{i}{content_type}"
+    filename = f"{dir_path}/{trans_title}_{now}_{i}{content_type}"
     with open(filename, mode="wb")as wf:
       wf.write(img_data)
       images.append(os.path.basename(filename))
@@ -841,7 +866,7 @@ def scraping_images(d_prompts) -> dict:
       sleep(short_timer)
       url_list = pass_img_urls(browser=BROWSER, cnt=retry_cnt, timer=short_timer)
       img_dir_path = set_img_dir(title)
-      images_list = download_images(browser=BROWSER, cnt=retry_cnt, timer=short_timer, urls=url_list, prompt=prompt, dir_path=img_dir_path)
+      images_list = download_images(browser=BROWSER, cnt=retry_cnt, timer=short_timer, urls=url_list, title=title, prompt=prompt, dir_path=img_dir_path)
       jobs[title] = images_list
 
   return jobs
@@ -953,7 +978,7 @@ def jp_en_translate(jobs):
  """
 def jp_en_translate(string):
   translator = Translator()
-  if not string.isalnum():
+  if not (string.isalnum() and string.isascii()):
     string = translator.translate(string, dest='en').text
   return string
 

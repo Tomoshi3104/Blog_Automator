@@ -42,7 +42,7 @@ INNER_PUDDING = '\n\n\n\n'
 STATUS_NO = "NotAssigned"
 STATUS_GO = "AutoQueue"
 STATUS_ONGOING = "PostQueue"
-STATUS_AWAIT = "ReveiwAwaiting"
+STATUS_AWAIT = "ReviewAwaiting"
 STATUS_FIX = "ChangeQueue"
 STATUS_END = "Confirmed"
 
@@ -155,7 +155,7 @@ def json_to_POST(dict_data:dict) -> list:
     #html_mix = "".join(html_converter(ele["Contents"]))
     data = {
       'title': ele["Title"],
-      'status': 'pending',  # publish, draft
+      'status': 'private',  # publish, draft, private, pending
       'content': '\n'.join(ele["Contents"]), ###整形が必要
       'categories': [], #[5],
       'tags': [], #[189, 148],
@@ -167,7 +167,7 @@ def json_to_POST(dict_data:dict) -> list:
 
 def jp_en_translate(string):
   translator = Translator()
-  if not string.isalnum():
+  if not (string.isalnum() and string.isascii()):
     string = translator.translate(string, dest='en').text
   return string
 

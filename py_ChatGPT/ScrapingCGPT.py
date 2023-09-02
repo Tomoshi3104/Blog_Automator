@@ -72,6 +72,7 @@ USER = read_config("User")
 PASSWORD = read_config("password")
 SKIP_LOGIN = read_config("SkipAutoLogIn")
 IS_NEW_BROWSER = read_config("IsNewBrowser")
+IS_NON_STOP = read_config("NonStop")
 #ORDER = "\n".join(read_config("Order"))
 ORDER_LIST = read_config("Order")
 
@@ -484,9 +485,10 @@ def scraping_exist_browser(l_orders) -> list:
   print("For Mac: run the following command in terminal and get pass ChatGPT login. After that, press 'yes' and enter.")
   print('Command: /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --profile-directory="Profile 18"')
   print("Tips: profile-directory can be found under '/Users/<username>/Library/Application Support/Google/Chrome/' folder")
-  while True:
-    if input("Are you ready for Scraping? (yes/no): ").lower() in ["y","yes"]:
-      break
+  if not IS_NON_STOP:
+    while True:
+      if input("Are you ready for Scraping? (yes/no): ").lower() in ["y","yes"]:
+        break
   #subprocess.run(["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--remote-debugging-port=9222", "--profile-directory='Profile 12'"])
   #subprocess.run(["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--remote-debugging-port=9222", "--user-data-dir=/Users/satoshi/Library/Application Support/Google/Chrome/" "--profile-directory='Profile 12'"])
   #sleep(short_timer)
@@ -552,7 +554,7 @@ def scraping_exist_browser(l_orders) -> list:
   """ else:
     print(f"current_url error: {BROWSER.current_url}")
     exit() """
-  
+  BROWSER.quit()
   return l_sentences
 
       #url_list = pass_img_urls(browser=BROWSER, cnt=retry_cnt, timer=short_timer)
